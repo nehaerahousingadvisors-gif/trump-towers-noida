@@ -821,6 +821,145 @@ function AmenitiesSection() {
   );
 }
 
+// ── Enquire Now Modal ──
+function EnquireModal({ onClose }: { onClose: () => void }) {
+  const [name, setName]   = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [sent, setSent]   = useState(false);
+
+  // lock body scroll
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  // close on Escape
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setSent(true);
+    setTimeout(onClose, 1800);
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center px-4"
+      style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }}
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-[520px] bg-white rounded-2xl shadow-2xl px-8 py-10"
+        style={{ animation: "modalPop 0.3s cubic-bezier(0.34,1.56,0.64,1) both" }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-5 text-[#999] hover:text-[#333] text-[22px] leading-none transition-colors"
+          aria-label="Close"
+        >
+          ×
+        </button>
+
+        {/* Heading */}
+        <div className="text-center mb-6">
+          <h2 className="text-[28px] font-bold leading-tight text-[#1c2b4a]">
+            Talk to Our
+          </h2>
+          <h2 className="text-[28px] font-bold leading-tight" style={{ color: "#c9a84c" }}>
+            Property Expert
+          </h2>
+          <div className="w-12 h-[2.5px] mx-auto mt-3 rounded-full" style={{ background: "#c9a84c" }} />
+        </div>
+
+        {sent ? (
+          <div className="text-center py-6">
+            <div className="text-[40px] mb-3">✅</div>
+            <p className="text-[#1c2b4a] text-[16px] font-semibold">Thank you! We'll be in touch shortly.</p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            {/* Name */}
+            <div className="flex items-center gap-3 border border-[#dde4f0] rounded-2xl px-4 py-3 bg-[#f7f9ff] focus-within:border-[#1c2b4a] transition-colors">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="shrink-0 text-[#888]" aria-hidden="true">
+                <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="1.8" fill="none"/>
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" fill="none"/>
+              </svg>
+              <input
+                type="text" required value={name} onChange={e => setName(e.target.value)}
+                placeholder="Name"
+                className="flex-1 bg-transparent text-[15px] text-[#333] placeholder-[#aaa] outline-none"
+              />
+            </div>
+
+            {/* Mobile */}
+            <div className="flex items-center gap-3 border border-[#dde4f0] rounded-2xl px-4 py-3 bg-[#f7f9ff] focus-within:border-[#1c2b4a] transition-colors">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="shrink-0 text-[#888]" aria-hidden="true">
+                <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C10.56 21 3 13.44 3 4c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z" stroke="currentColor" strokeWidth="1.8" fill="none"/>
+              </svg>
+              <input
+                type="tel" required value={phone} onChange={e => setPhone(e.target.value)}
+                placeholder="Mobile No."
+                className="flex-1 bg-transparent text-[15px] text-[#333] placeholder-[#aaa] outline-none"
+              />
+            </div>
+
+            {/* Email */}
+            <div className="flex items-center gap-3 border border-[#dde4f0] rounded-2xl px-4 py-3 bg-[#f7f9ff] focus-within:border-[#1c2b4a] transition-colors">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="shrink-0 text-[#888]" aria-hidden="true">
+                <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" strokeWidth="1.8" fill="none"/>
+                <path d="M2 7l10 7 10-7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+              </svg>
+              <input
+                type="email" required value={email} onChange={e => setEmail(e.target.value)}
+                placeholder="Email"
+                className="flex-1 bg-transparent text-[15px] text-[#333] placeholder-[#aaa] outline-none"
+              />
+            </div>
+
+            {/* Buttons */}
+            <div className="grid grid-cols-2 gap-3 mt-2">
+              <a
+                href="tel:+919667394175"
+                className="flex items-center justify-center gap-2 py-3.5 rounded-xl text-white text-[14px] font-bold tracking-wide"
+                style={{ background: "#1c2b4a" }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C10.56 21 3 13.44 3 4c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z" fill="white"/>
+                </svg>
+                +91 9667394175
+              </a>
+              <button
+                type="submit"
+                className="flex items-center justify-center gap-2 py-3.5 rounded-xl text-white text-[14px] font-bold tracking-widest uppercase hover:brightness-105 active:scale-95 transition-all"
+                style={{ background: "#c9a84c" }}
+              >
+                Submit
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
+
+      <style>{`
+        @keyframes modalPop {
+          from { opacity: 0; transform: scale(0.92) translateY(16px); }
+          to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 // ── Price List animated section ──
 const priceRows = [
   { type: "4 BHK SIGNATURE", size: "4,925 SQ. FT",  price: "₹19.70 CR*" },
@@ -831,9 +970,11 @@ const priceRows = [
 function PriceSection() {
   const heading  = useInView(0.1);
   const tableRef = useInView(0.05);
+  const [modalOpen, setModalOpen] = useState(false);
 
   return (
     <section id="price" className="w-full bg-white py-14 px-4 sm:px-10 overflow-hidden">
+      {modalOpen && <EnquireModal onClose={() => setModalOpen(false)} />}
       <div className="mx-auto max-w-5xl">
 
         {/* Heading */}
@@ -892,6 +1033,7 @@ function PriceSection() {
                 <div className="px-5 py-5 text-center text-[16px] text-[#333]">{row.price}</div>
                 <div className="px-5 py-5 flex justify-center">
                   <button
+                    onClick={() => setModalOpen(true)}
                     className="flex items-center gap-2 px-5 py-2.5 rounded-md text-white text-[14px] font-semibold hover:opacity-90 active:scale-95 transition-all"
                     style={{ background: "#1c2b4a" }}
                   >
@@ -934,6 +1076,7 @@ function PriceSection() {
                     <span className="text-[15px] font-bold text-[#1c2b4a]">{row.price}</span>
                   </div>
                   <button
+                    onClick={() => setModalOpen(true)}
                     className="mt-1 w-full flex items-center justify-center gap-2 py-3 rounded-lg text-white text-[14px] font-semibold hover:opacity-90 active:scale-95 transition-all"
                     style={{ background: "#1c2b4a" }}
                   >
