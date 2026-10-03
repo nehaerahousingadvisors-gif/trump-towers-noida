@@ -2,14 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Cinzel, Raleway } from "next/font/google";
-
-// Cinzel — Roman-inspired luxury caps, perfect for prestige brands
-const cinzel = Cinzel({
-  subsets: ["latin"],
-  weight: ["400", "600", "700", "900"],
-  display: "swap",
-});
+import { Raleway } from "next/font/google";
 
 // Raleway — elegant geometric sans for nav
 const raleway = Raleway({
@@ -20,7 +13,6 @@ const raleway = Raleway({
 
 const navLinks = [
   { label: "Home",        href: "#home" },
-  { label: "Master Plan", href: "#master-plan" },
   { label: "Floor Plan",  href: "#floor-plan" },
   { label: "Price",       href: "#price" },
   { label: "Gallery",     href: "#gallery" },
@@ -36,37 +28,13 @@ export default function Header() {
       <div className="mx-auto flex items-center justify-between px-6 lg:px-10 py-3 max-w-screen-2xl">
 
         {/* ── Logo ── */}
-        <Link href="/" className="flex items-center gap-3 shrink-0">
-          {/* Gold tower bars */}
-          <svg width="28" height="44" viewBox="0 0 28 44" fill="none" aria-hidden="true">
-            <rect x="0"    y="16" width="4" height="28" rx="1.5" fill="#c9a84c" />
-            <rect x="6"    y="10" width="4" height="34" rx="1.5" fill="#c9a84c" />
-            <rect x="12"   y="0"  width="4" height="44" rx="1.5" fill="#c9a84c" />
-            <rect x="18"   y="10" width="4" height="34" rx="1.5" fill="#c9a84c" />
-            <rect x="24"   y="16" width="4" height="28" rx="1.5" fill="#c9a84c" />
-          </svg>
-
-          {/* Logo text — Cinzel */}
-          <div className={`${cinzel.className} flex flex-col leading-none`}>
-            <span
-              className="text-[10.5px] tracking-[0.5em] font-semibold"
-              style={{ color: "#c9a84c" }}
-            >
-              TRUMP
-            </span>
-            <span
-              className="text-[19px] tracking-[0.28em] font-bold leading-tight"
-              style={{ color: "#1c2b4a" }}
-            >
-              TOWERS
-            </span>
-            <span
-              className="text-[7.5px] tracking-[0.55em] font-400 mt-[2px]"
-              style={{ color: "#999" }}
-            >
-              NOIDA
-            </span>
-          </div>
+        <Link href="/" className="flex items-center shrink-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logotrump-removebg-preview.png"
+            alt="Trump Towers Noida"
+            style={{ height: "54px", width: "auto", objectFit: "contain" }}
+          />
         </Link>
 
         {/* ── Desktop Nav — Raleway ── */}

@@ -6,61 +6,83 @@ import { Lexend } from "next/font/google";
 
 const lexend = Lexend({ subsets: ["latin"], weight: ["400", "500", "600"] });
 
+// ── Hero background crossfade slider ──
+const heroBgImages = [
+  { src: "/image.png",      pos: "center center" },
+  { src: "/image copy 6.png", pos: "center top"    },
+];
+
+function HeroBgSlider() {
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      setActive((prev) => (prev + 1) % heroBgImages.length);
+    }, 5000); // swap every 5s
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <>
+      {heroBgImages.map((img, idx) => (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          key={img.src}
+          src={img.src}
+          alt=""
+          aria-hidden="true"
+          style={{
+            position: "absolute", inset: 0,
+            width: "100%", height: "100%",
+            objectFit: "cover",
+            objectPosition: img.pos,
+            zIndex: 0,
+            opacity: idx === active ? 1 : 0,
+            transition: "opacity 1.8s ease-in-out",
+            animation: idx === active
+              ? "heroBgZoom 10s ease-in-out infinite alternate"
+              : "none",
+          }}
+        />
+      ))}
+    </>
+  );
+}
+
 export default function Home() {
-  const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    message: "Yes, I am interested in site visit..*",
-  });
-
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  }
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    // handle form submission here
-    alert("Message sent!");
-  }
-
   return (
     <>
     <section
       id="home"
       className="relative w-full min-h-screen flex items-center overflow-hidden"
-      style={{
-        background:
-          "linear-gradient(135deg, #4a5568 0%, #6b7280 25%, #9ca3af 50%, #6b7280 75%, #4a5568 100%)",
-      }}
     >
-      {/* Background overlay — dark gradient from left */}
+      {/* Background slider — crossfade between two images */}
+      <HeroBgSlider />
+
+      {/* Dark gradient overlay — left heavy so left text is readable */}
       <div
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 z-[1]"
         style={{
           background:
-            "linear-gradient(to right, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.15) 100%)",
+            "linear-gradient(to right, rgba(5,10,20,0.45) 0%, rgba(5,10,20,0.25) 55%, rgba(5,10,20,0.10) 100%)",
         }}
       />
 
-      {/* Cloudy sky texture overlay */}
+      {/* Bottom fade to blend with next section */}
       <div
-        className="absolute inset-0 z-0 opacity-60"
+        className="absolute bottom-0 left-0 right-0 h-32 z-[1]"
         style={{
-          background:
-            "radial-gradient(ellipse at 30% 20%, rgba(100,116,139,0.5) 0%, transparent 60%), radial-gradient(ellipse at 70% 10%, rgba(71,85,105,0.4) 0%, transparent 50%), radial-gradient(ellipse at 50% 80%, rgba(30,41,59,0.6) 0%, transparent 70%)",
+          background: "linear-gradient(to bottom, transparent, rgba(5,10,20,0.6))",
         }}
       />
 
       {/* Content */}
-      <div className="relative z-10 w-full mx-auto max-w-screen-xl px-8 py-20 flex flex-col lg:flex-row items-center lg:items-end justify-between gap-12">
+      <div className="relative z-[2] w-full mx-auto max-w-screen-xl px-8 pt-28 pb-16 sm:pt-48 sm:pb-20">
 
-        {/* ── Left: Hero Text ── */}
-        <div className="flex flex-col gap-5 max-w-xl">
+        {/* ── Hero Text ── */}
+        <div className="flex flex-col gap-5 max-w-2xl">
           {/* Main heading */}
-          <h1 className="text-white text-[42px] md:text-[52px] font-bold leading-tight tracking-tight drop-shadow-lg">
+          <h1 className="text-white text-[28px] sm:text-[38px] md:text-[52px] font-bold leading-tight tracking-tight drop-shadow-lg">
             Trump Towers Noida
           </h1>
 
@@ -73,17 +95,17 @@ export default function Home() {
           </span>
 
           {/* Subtitle */}
-          <p className="text-[#d0c8bc] text-[16px] font-medium tracking-wide">
+          <p className="text-white text-[15px] sm:text-[18px] font-semibold tracking-wide drop-shadow-md">
             4 &amp; 5 BHK Ultra-Luxury Branded Residence
           </p>
 
           {/* Feature bullets */}
-          <ul className="flex flex-col gap-2 mt-1">
-            <li className="flex items-center gap-2 text-[#ccc] text-[14px]">
+          <ul className="flex flex-col gap-3 mt-1">
+            <li className="flex items-center gap-2 text-white text-[13px] sm:text-[15px] font-semibold drop-shadow-md">
               <span className="text-[16px]">🏢</span>
               Iconic Twin Towers Landmark
             </li>
-            <li className="flex items-center gap-2 text-[#ccc] text-[14px]">
+            <li className="flex items-center gap-2 text-white text-[13px] sm:text-[15px] font-semibold drop-shadow-md">
               <span className="text-[16px]">🏠</span>
               Under Construction
             </li>
@@ -95,95 +117,6 @@ export default function Home() {
           >
             Price Starts : ₹19.70 Cr*
           </button>
-        </div>
-
-        {/* ── Right: Contact Form ── */}
-        <div
-          className="w-full max-w-[370px] rounded-2xl overflow-hidden shadow-2xl"
-          style={{ background: "linear-gradient(160deg, #1a1610 0%, #2a1f0a 50%, #1a1610 100%)" }}
-        >
-          {/* Form header */}
-          <div
-            className="px-6 py-5"
-            style={{ background: "linear-gradient(135deg, #1c2b4a 0%, #1c2b4a 50%, #1c2b4a 100%)" }}
-          >
-            <h2 className="text-white text-[16px] font-bold text-center tracking-wide">
-              Interested in Trump Towers Noida?
-            </h2>
-          </div>
-
-          {/* Form body */}
-          <form onSubmit={handleSubmit} className="flex flex-col gap-3 px-6 py-6">
-            {/* Name */}
-            <div className="flex items-center gap-3 bg-white rounded-lg px-4 py-[11px]">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" fill="#999"/>
-              </svg>
-              <input
-                type="text"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="Name"
-                required
-                className="flex-1 text-[13px] text-gray-700 placeholder-gray-400 outline-none bg-transparent"
-              />
-            </div>
-
-            {/* Phone */}
-            <div className="flex items-center gap-3 bg-white rounded-lg px-4 py-[11px]">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C10.56 21 3 13.44 3 4c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z" fill="#999"/>
-              </svg>
-              <input
-                type="tel"
-                name="phone"
-                value={form.phone}
-                onChange={handleChange}
-                placeholder="Phone No"
-                required
-                className="flex-1 text-[13px] text-gray-700 placeholder-gray-400 outline-none bg-transparent"
-              />
-            </div>
-
-            {/* Email */}
-            <div className="flex items-center gap-3 bg-white rounded-lg px-4 py-[11px]">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="#999"/>
-              </svg>
-              <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="Email Id"
-                required
-                className="flex-1 text-[13px] text-gray-700 placeholder-gray-400 outline-none bg-transparent"
-              />
-            </div>
-
-            {/* Message */}
-            <div className="flex items-start gap-3 bg-white rounded-lg px-4 py-[11px]">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="mt-0.5" aria-hidden="true">
-                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="#1c2b4a"/>
-              </svg>
-              <textarea
-                name="message"
-                value={form.message}
-                onChange={handleChange}
-                rows={3}
-                className="flex-1 text-[13px] text-gray-500 placeholder-gray-400 outline-none bg-transparent resize-none"
-              />
-            </div>
-
-            {/* Submit */}
-            <button
-              type="submit"
-              className="w-full py-[14px] bg-white text-black text-[14px] font-bold tracking-wide rounded-full hover:bg-[#f0e8d8] transition-colors duration-200 mt-1"
-            >
-              Send Message
-            </button>
-          </form>
         </div>
 
       </div>
@@ -199,219 +132,11 @@ export default function Home() {
     {/* ── Price List Section ── */}
     <PriceSection />
     {/* ── Floor Plan Section ── */}
-    <section id="floor-plan" className="w-full py-16 px-4 sm:px-10" style={{ background: "linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 50%, #f0f4ff 100%)" }}>
-      <div className="mx-auto max-w-5xl">
-
-        {/* Top label */}
-        <p className="text-center text-[12px] font-bold tracking-[0.3em] uppercase mb-2" style={{ color: "#1c2b4a" }}>
-          — EXPLORE LAYOUTS —
-        </p>
-
-        {/* Heading */}
-        <h2 className="text-center text-[44px] md:text-[56px] font-black leading-none tracking-tight mb-2" style={{ color: "#c9a84c" }}>
-          Project Floor Plan
-        </h2>
-
-        {/* Subheading */}
-        <p className="text-center text-[14px] text-[#666] mb-10">
-          Spacious and well-designed floor plans for modern living
-        </p>
-
-        {/* Two floor plan cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-          {/* ── 4 BHK Card ── */}
-          <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-[#e8eef8]">
-            {/* Card header */}
-            <div className="flex items-start justify-between px-6 pt-6 pb-2">
-              <div>
-                <p className="text-[22px] font-bold text-[#1c2b4a]">4 BHK</p>
-                <p className="text-[13px] text-[#888]">Floor Plan</p>
-              </div>
-              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-semibold text-[#1c2b4a] border border-[#1c2b4a] bg-[#e8eef8]">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M3 9.5L12 4l9 5.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="#1c2b4a" strokeWidth="1.6" fill="none"/>
-                  <path d="M9 21V12h6v9" stroke="#1c2b4a" strokeWidth="1.6"/>
-                </svg>
-                4 Bedrooms
-              </span>
-            </div>
-
-            {/* Floor plan image placeholder */}
-            <div className="mx-3 my-2 rounded-xl overflow-hidden bg-[#f5f0e8]" style={{ height: "130px" }}>
-              <svg width="100%" height="100%" viewBox="0 0 400 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                {/* Outer boundary */}
-                <rect x="20" y="10" width="360" height="200" rx="4" fill="#e8dfc8" stroke="#b0976a" strokeWidth="2"/>
-                {/* Room 1 — Master bedroom */}
-                <rect x="20" y="10" width="130" height="90" fill="#d4c4a0" stroke="#b0976a" strokeWidth="1.5"/>
-                <text x="85" y="60" textAnchor="middle" fontSize="9" fill="#7a6040">Master</text>
-                <text x="85" y="72" textAnchor="middle" fontSize="9" fill="#7a6040">Bedroom</text>
-                {/* Room 2 — Living */}
-                <rect x="150" y="10" width="140" height="110" fill="#c8dce8" stroke="#8ab0c4" strokeWidth="1.5"/>
-                <text x="220" y="65" textAnchor="middle" fontSize="9" fill="#3a6080">Living /</text>
-                <text x="220" y="77" textAnchor="middle" fontSize="9" fill="#3a6080">Dining</text>
-                {/* Room 3 — Bedroom 2 */}
-                <rect x="20" y="110" width="110" height="80" fill="#d4c4a0" stroke="#b0976a" strokeWidth="1.5"/>
-                <text x="75" y="155" textAnchor="middle" fontSize="9" fill="#7a6040">Bedroom 2</text>
-                {/* Kitchen */}
-                <rect x="290" y="10" width="90" height="80" fill="#e8d0b0" stroke="#c09060" strokeWidth="1.5"/>
-                <text x="335" y="55" textAnchor="middle" fontSize="9" fill="#7a5030">Kitchen</text>
-                {/* Bathroom */}
-                <rect x="290" y="90" width="90" height="50" fill="#b8d4e0" stroke="#7aaac0" strokeWidth="1.5"/>
-                <text x="335" y="120" textAnchor="middle" fontSize="9" fill="#3a6880">Bath</text>
-                {/* Bedroom 3 */}
-                <rect x="130" y="130" width="160" height="80" fill="#d4c4a0" stroke="#b0976a" strokeWidth="1.5"/>
-                <text x="210" y="175" textAnchor="middle" fontSize="9" fill="#7a6040">Bedroom 3 / Balcony</text>
-                {/* Bedroom 4 */}
-                <rect x="20" y="160" width="100" height="50" fill="#ddd0b8" stroke="#b0976a" strokeWidth="1.5" opacity="0.8"/>
-                <text x="70" y="190" textAnchor="middle" fontSize="8" fill="#7a6040">Bedroom 4</text>
-              </svg>
-            </div>
-
-            {/* Stats row */}
-            <div className="grid grid-cols-3 gap-2 px-4 py-2 border-t border-[#f0f0f0]">
-              <div className="flex items-center gap-2">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3m8 0h3a2 2 0 002-2v-3" stroke="#1c2b4a" strokeWidth="1.8" strokeLinecap="round"/>
-                </svg>
-                <div>
-                  <p className="text-[10px] text-[#999]">Carpet Area</p>
-                  <p className="text-[12px] font-bold text-[#1c2b4a]">~1800 Sq. Ft.</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <rect x="3" y="3" width="18" height="18" rx="2" stroke="#1c2b4a" strokeWidth="1.8" fill="none"/>
-                  <path d="M3 9h18M9 3v18" stroke="#1c2b4a" strokeWidth="1.2"/>
-                </svg>
-                <div>
-                  <p className="text-[10px] text-[#999]">Configuration</p>
-                  <p className="text-[12px] font-bold text-[#1c2b4a]">4 BHK + 4T</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <rect x="3" y="8" width="18" height="13" rx="1" stroke="#1c2b4a" strokeWidth="1.8" fill="none"/>
-                  <path d="M8 8V5a4 4 0 018 0v3" stroke="#1c2b4a" strokeWidth="1.8" strokeLinecap="round"/>
-                </svg>
-                <div>
-                  <p className="text-[10px] text-[#999]">Balcony</p>
-                  <p className="text-[12px] font-bold text-[#1c2b4a]">3 Balconies</p>
-                </div>
-              </div>
-            </div>
-
-            {/* CTA Button */}
-            <div className="px-5 pb-6">
-              <button
-                className="w-full py-3.5 rounded-xl text-white text-[14px] font-semibold hover:opacity-90 transition-opacity"
-                style={{ background: "#1c2b4a" }}
-              >
-                View 4 BHK Floor Plan →
-              </button>
-            </div>
-          </div>
-
-          {/* ── 5 BHK Card ── */}
-          <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-[#e8eef8]">
-            {/* Card header */}
-            <div className="flex items-start justify-between px-6 pt-6 pb-2">
-              <div>
-                <p className="text-[22px] font-bold text-[#1c2b4a]">5 BHK</p>
-                <p className="text-[13px] text-[#888]">Floor Plan</p>
-              </div>
-              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-semibold text-[#1c2b4a] border border-[#1c2b4a] bg-[#e8eef8]">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M3 9.5L12 4l9 5.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="#1c2b4a" strokeWidth="1.6" fill="none"/>
-                  <path d="M9 21V12h6v9" stroke="#1c2b4a" strokeWidth="1.6"/>
-                </svg>
-                5 Bedrooms
-              </span>
-            </div>
-
-            {/* Floor plan image placeholder */}
-            <div className="mx-3 my-2 rounded-xl overflow-hidden bg-[#f5f0e8]" style={{ height: "130px" }}>
-              <svg width="100%" height="100%" viewBox="0 0 400 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <rect x="10" y="10" width="380" height="200" rx="4" fill="#e8dfc8" stroke="#b0976a" strokeWidth="2"/>
-                {/* Room 1 */}
-                <rect x="10" y="10" width="110" height="80" fill="#d4c4a0" stroke="#b0976a" strokeWidth="1.5"/>
-                <text x="65" y="55" textAnchor="middle" fontSize="9" fill="#7a6040">Master Bed</text>
-                {/* Room 2 */}
-                <rect x="120" y="10" width="130" height="100" fill="#c8dce8" stroke="#8ab0c4" strokeWidth="1.5"/>
-                <text x="185" y="65" textAnchor="middle" fontSize="9" fill="#3a6080">Living Room</text>
-                {/* Room 3 */}
-                <rect x="250" y="10" width="140" height="80" fill="#d4c4a0" stroke="#b0976a" strokeWidth="1.5"/>
-                <text x="320" y="55" textAnchor="middle" fontSize="9" fill="#7a6040">Bedroom 2</text>
-                {/* Kitchen */}
-                <rect x="10" y="90" width="110" height="70" fill="#e8d0b0" stroke="#c09060" strokeWidth="1.5"/>
-                <text x="65" y="130" textAnchor="middle" fontSize="9" fill="#7a5030">Kitchen</text>
-                {/* Bedroom 3 */}
-                <rect x="120" y="110" width="100" height="80" fill="#d4c4a0" stroke="#b0976a" strokeWidth="1.5"/>
-                <text x="170" y="155" textAnchor="middle" fontSize="9" fill="#7a6040">Bedroom 3</text>
-                {/* Bedroom 4 */}
-                <rect x="250" y="90" width="140" height="70" fill="#d4c4a0" stroke="#b0976a" strokeWidth="1.5"/>
-                <text x="320" y="130" textAnchor="middle" fontSize="9" fill="#7a6040">Bedroom 4</text>
-                {/* Bedroom 5 */}
-                <rect x="220" y="160" width="170" height="50" fill="#ddd0b8" stroke="#b0976a" strokeWidth="1.5"/>
-                <text x="305" y="190" textAnchor="middle" fontSize="9" fill="#7a6040">Bedroom 5 / Balcony</text>
-                {/* Utility */}
-                <rect x="10" y="160" width="100" height="50" fill="#b8d4e0" stroke="#7aaac0" strokeWidth="1.5"/>
-                <text x="60" y="190" textAnchor="middle" fontSize="9" fill="#3a6880">Utility</text>
-                {/* Balcony strip */}
-                <rect x="120" y="193" width="98" height="17" fill="#c8e0d0" stroke="#70a890" strokeWidth="1"/>
-                <text x="169" y="205" textAnchor="middle" fontSize="7" fill="#3a7060">Balcony</text>
-              </svg>
-            </div>
-
-            {/* Stats row */}
-            <div className="grid grid-cols-3 gap-2 px-4 py-2 border-t border-[#f0f0f0]">
-              <div className="flex items-center gap-2">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3m8 0h3a2 2 0 002-2v-3" stroke="#1c2b4a" strokeWidth="1.8" strokeLinecap="round"/>
-                </svg>
-                <div>
-                  <p className="text-[10px] text-[#999]">Carpet Area</p>
-                  <p className="text-[12px] font-bold text-[#1c2b4a]">~2400 Sq. Ft.</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <rect x="3" y="3" width="18" height="18" rx="2" stroke="#1c2b4a" strokeWidth="1.8" fill="none"/>
-                  <path d="M3 9h18M9 3v18" stroke="#1c2b4a" strokeWidth="1.2"/>
-                </svg>
-                <div>
-                  <p className="text-[10px] text-[#999]">Configuration</p>
-                  <p className="text-[12px] font-bold text-[#1c2b4a]">5 BHK + 5T</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <rect x="3" y="8" width="18" height="13" rx="1" stroke="#1c2b4a" strokeWidth="1.8" fill="none"/>
-                  <path d="M8 8V5a4 4 0 018 0v3" stroke="#1c2b4a" strokeWidth="1.8" strokeLinecap="round"/>
-                </svg>
-                <div>
-                  <p className="text-[10px] text-[#999]">Balcony</p>
-                  <p className="text-[12px] font-bold text-[#1c2b4a]">4 Balconies</p>
-                </div>
-              </div>
-            </div>
-
-            {/* CTA Button */}
-            <div className="px-5 pb-6">
-              <button
-                className="w-full py-3.5 rounded-xl text-white text-[14px] font-semibold hover:opacity-90 transition-opacity"
-                style={{ background: "#1c2b4a" }}
-              >
-                View 5 BHK Floor Plan →
-              </button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
+    <FloorPlanSection />
     {/* ── Gallery Section ── */}
     <GallerySection />
+    {/* ── Video Section ── */}
+    <VideoSection />
     {/* ── Location Section ── */}
     <LocationSection />
     {/* ── FAQ Section ── */}
@@ -608,44 +333,20 @@ function HighlightSection() {
               <span className="text-white text-[9px] font-bold mt-0.5 drop-shadow">0 KM</span>
             </div>
 
-            {/* Tower illustration */}
-            <div
-              className="w-full h-[520px] flex items-end justify-center"
-              style={{ background: "linear-gradient(180deg, #2c3e6b 0%, #4a6fa5 30%, #e8a44a 70%, #c4783a 100%)" }}
-            >
-              <svg
-                width="100%"
-                height="260"
-                viewBox="0 0 500 260"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                preserveAspectRatio="xMidYMax meet"
-                aria-hidden="true"
-              >
-                <rect x="130" y="20" width="80" height="240" fill="#1a2a4a" opacity="0.85"/>
-                <rect x="135" y="20" width="70" height="10" fill="#2a3a5a" opacity="0.9"/>
-                {[30,55,80,105,130,155,180].map((y, i) => (
-                  <g key={i}>
-                    <rect x="142" y={y} width="12" height="16" fill="#e8c87a" opacity="0.7"/>
-                    <rect x="162" y={y} width="12" height="16" fill="#e8c87a" opacity="0.5"/>
-                    <rect x="182" y={y} width="12" height="16" fill="#e8c87a" opacity="0.6"/>
-                  </g>
-                ))}
-                <rect x="290" y="40" width="80" height="220" fill="#1a2a4a" opacity="0.85"/>
-                <rect x="295" y="40" width="70" height="10" fill="#2a3a5a" opacity="0.9"/>
-                {[50,75,100,125,150,175].map((y, i) => (
-                  <g key={i}>
-                    <rect x="302" y={y} width="12" height="16" fill="#e8c87a" opacity="0.6"/>
-                    <rect x="322" y={y} width="12" height="16" fill="#e8c87a" opacity="0.8"/>
-                    <rect x="342" y={y} width="12" height="16" fill="#e8c87a" opacity="0.5"/>
-                  </g>
-                ))}
-                <rect x="0" y="240" width="500" height="20" fill="#3a6090" opacity="0.4"/>
-                <line x1="170" y1="20" x2="170" y2="0" stroke="#888" strokeWidth="2"/>
-                <line x1="170" y1="0" x2="210" y2="5" stroke="#888" strokeWidth="1.5"/>
-                <line x1="330" y1="40" x2="330" y2="5" stroke="#888" strokeWidth="2"/>
-                <line x1="330" y1="5" x2="290" y2="10" stroke="#888" strokeWidth="1.5"/>
-              </svg>
+            {/* Trump Towers location map photo */}
+            <div className="w-full overflow-hidden rounded-b-xl">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/image copy 2.png"
+                alt="Trump Towers Noida — Location Map"
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  display: "block",
+                  transition: "transform 0.6s ease",
+                  animation: image.inView ? "mapReveal 0.9s cubic-bezier(0.22,1,0.36,1) both" : "none",
+                }}
+              />
             </div>
           </div>
 
@@ -1097,6 +798,157 @@ function PriceSection() {
   );
 }
 
+// ── Floor Plan Section ──
+function FloorPlanSection() {
+  const [modalOpen, setModalOpen] = useState(false);
+
+  return (
+    <section id="floor-plan" className="w-full py-16 px-4 sm:px-10" style={{ background: "linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 50%, #f0f4ff 100%)" }}>
+      {modalOpen && <EnquireModal onClose={() => setModalOpen(false)} />}
+      <div className="mx-auto max-w-5xl">
+
+        <p className="text-center text-[12px] font-bold tracking-[0.3em] uppercase mb-2" style={{ color: "#1c2b4a" }}>
+          — EXPLORE LAYOUTS —
+        </p>
+        <h2 className="text-center text-[44px] md:text-[56px] font-black leading-none tracking-tight mb-2" style={{ color: "#c9a84c" }}>
+          Project Floor Plan
+        </h2>
+        <p className="text-center text-[14px] text-[#666] mb-10">
+          Spacious and well-designed floor plans for modern living
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+          {/* ── 4 BHK Card ── */}
+          <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-[#e8eef8]">
+            <div className="flex items-start justify-between px-6 pt-6 pb-2">
+              <div>
+                <p className="text-[22px] font-bold text-[#1c2b4a]">4 BHK</p>
+                <p className="text-[13px] text-[#888]">Floor Plan</p>
+              </div>
+              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-semibold text-[#1c2b4a] border border-[#1c2b4a] bg-[#e8eef8]">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M3 9.5L12 4l9 5.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="#1c2b4a" strokeWidth="1.6" fill="none"/>
+                  <path d="M9 21V12h6v9" stroke="#1c2b4a" strokeWidth="1.6"/>
+                </svg>
+                4 Bedrooms
+              </span>
+            </div>
+            <div className="mx-3 my-2 rounded-xl overflow-hidden bg-[#f5f0e8]" style={{ height: "130px", opacity: 0.15 }}>
+              <svg width="100%" height="100%" viewBox="0 0 400 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="20" y="10" width="360" height="200" rx="4" fill="#e8dfc8" stroke="#b0976a" strokeWidth="2"/>
+                <rect x="20" y="10" width="130" height="90" fill="#d4c4a0" stroke="#b0976a" strokeWidth="1.5"/>
+                <text x="85" y="60" textAnchor="middle" fontSize="9" fill="#7a6040">Master</text>
+                <text x="85" y="72" textAnchor="middle" fontSize="9" fill="#7a6040">Bedroom</text>
+                <rect x="150" y="10" width="140" height="110" fill="#c8dce8" stroke="#8ab0c4" strokeWidth="1.5"/>
+                <text x="220" y="65" textAnchor="middle" fontSize="9" fill="#3a6080">Living /</text>
+                <text x="220" y="77" textAnchor="middle" fontSize="9" fill="#3a6080">Dining</text>
+                <rect x="20" y="110" width="110" height="80" fill="#d4c4a0" stroke="#b0976a" strokeWidth="1.5"/>
+                <text x="75" y="155" textAnchor="middle" fontSize="9" fill="#7a6040">Bedroom 2</text>
+                <rect x="290" y="10" width="90" height="80" fill="#e8d0b0" stroke="#c09060" strokeWidth="1.5"/>
+                <text x="335" y="55" textAnchor="middle" fontSize="9" fill="#7a5030">Kitchen</text>
+                <rect x="290" y="90" width="90" height="50" fill="#b8d4e0" stroke="#7aaac0" strokeWidth="1.5"/>
+                <text x="335" y="120" textAnchor="middle" fontSize="9" fill="#3a6880">Bath</text>
+                <rect x="130" y="130" width="160" height="80" fill="#d4c4a0" stroke="#b0976a" strokeWidth="1.5"/>
+                <text x="210" y="175" textAnchor="middle" fontSize="9" fill="#7a6040">Bedroom 3 / Balcony</text>
+                <rect x="20" y="160" width="100" height="50" fill="#ddd0b8" stroke="#b0976a" strokeWidth="1.5" opacity="0.8"/>
+                <text x="70" y="190" textAnchor="middle" fontSize="8" fill="#7a6040">Bedroom 4</text>
+              </svg>
+            </div>
+            <div className="grid grid-cols-3 gap-2 px-4 py-2 border-t border-[#f0f0f0]">
+              <div className="flex items-center gap-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3m8 0h3a2 2 0 002-2v-3" stroke="#1c2b4a" strokeWidth="1.8" strokeLinecap="round"/></svg>
+                <div><p className="text-[10px] text-[#999]">Carpet Area</p><p className="text-[12px] font-bold text-[#1c2b4a]">~1800 Sq. Ft.</p></div>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" stroke="#1c2b4a" strokeWidth="1.8" fill="none"/><path d="M3 9h18M9 3v18" stroke="#1c2b4a" strokeWidth="1.2"/></svg>
+                <div><p className="text-[10px] text-[#999]">Configuration</p><p className="text-[12px] font-bold text-[#1c2b4a]">4 BHK + 4T</p></div>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="8" width="18" height="13" rx="1" stroke="#1c2b4a" strokeWidth="1.8" fill="none"/><path d="M8 8V5a4 4 0 018 0v3" stroke="#1c2b4a" strokeWidth="1.8" strokeLinecap="round"/></svg>
+                <div><p className="text-[10px] text-[#999]">Balcony</p><p className="text-[12px] font-bold text-[#1c2b4a]">3 Balconies</p></div>
+              </div>
+            </div>
+            <div className="px-5 pb-6">
+              <button
+                onClick={() => setModalOpen(true)}
+                className="w-full py-3.5 rounded-xl text-white text-[14px] font-semibold hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+                style={{ background: "#1c2b4a" }}
+              >
+                View 4 BHK Floor Plan →
+              </button>
+            </div>
+          </div>
+
+          {/* ── 5 BHK Card ── */}
+          <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-[#e8eef8]">
+            <div className="flex items-start justify-between px-6 pt-6 pb-2">
+              <div>
+                <p className="text-[22px] font-bold text-[#1c2b4a]">5 BHK</p>
+                <p className="text-[13px] text-[#888]">Floor Plan</p>
+              </div>
+              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-semibold text-[#1c2b4a] border border-[#1c2b4a] bg-[#e8eef8]">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M3 9.5L12 4l9 5.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="#1c2b4a" strokeWidth="1.6" fill="none"/>
+                  <path d="M9 21V12h6v9" stroke="#1c2b4a" strokeWidth="1.6"/>
+                </svg>
+                5 Bedrooms
+              </span>
+            </div>
+            <div className="mx-3 my-2 rounded-xl overflow-hidden bg-[#f5f0e8]" style={{ height: "130px", opacity: 0.15 }}>
+              <svg width="100%" height="100%" viewBox="0 0 400 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="10" y="10" width="380" height="200" rx="4" fill="#e8dfc8" stroke="#b0976a" strokeWidth="2"/>
+                <rect x="10" y="10" width="110" height="80" fill="#d4c4a0" stroke="#b0976a" strokeWidth="1.5"/>
+                <text x="65" y="55" textAnchor="middle" fontSize="9" fill="#7a6040">Master Bed</text>
+                <rect x="120" y="10" width="130" height="100" fill="#c8dce8" stroke="#8ab0c4" strokeWidth="1.5"/>
+                <text x="185" y="65" textAnchor="middle" fontSize="9" fill="#3a6080">Living Room</text>
+                <rect x="250" y="10" width="140" height="80" fill="#d4c4a0" stroke="#b0976a" strokeWidth="1.5"/>
+                <text x="320" y="55" textAnchor="middle" fontSize="9" fill="#7a6040">Bedroom 2</text>
+                <rect x="10" y="90" width="110" height="70" fill="#e8d0b0" stroke="#c09060" strokeWidth="1.5"/>
+                <text x="65" y="130" textAnchor="middle" fontSize="9" fill="#7a5030">Kitchen</text>
+                <rect x="120" y="110" width="100" height="80" fill="#d4c4a0" stroke="#b0976a" strokeWidth="1.5"/>
+                <text x="170" y="155" textAnchor="middle" fontSize="9" fill="#7a6040">Bedroom 3</text>
+                <rect x="250" y="90" width="140" height="70" fill="#d4c4a0" stroke="#b0976a" strokeWidth="1.5"/>
+                <text x="320" y="130" textAnchor="middle" fontSize="9" fill="#7a6040">Bedroom 4</text>
+                <rect x="220" y="160" width="170" height="50" fill="#ddd0b8" stroke="#b0976a" strokeWidth="1.5"/>
+                <text x="305" y="190" textAnchor="middle" fontSize="9" fill="#7a6040">Bedroom 5 / Balcony</text>
+                <rect x="10" y="160" width="100" height="50" fill="#b8d4e0" stroke="#7aaac0" strokeWidth="1.5"/>
+                <text x="60" y="190" textAnchor="middle" fontSize="9" fill="#3a6880">Utility</text>
+                <rect x="120" y="193" width="98" height="17" fill="#c8e0d0" stroke="#70a890" strokeWidth="1"/>
+                <text x="169" y="205" textAnchor="middle" fontSize="7" fill="#3a7060">Balcony</text>
+              </svg>
+            </div>
+            <div className="grid grid-cols-3 gap-2 px-4 py-2 border-t border-[#f0f0f0]">
+              <div className="flex items-center gap-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3m8 0h3a2 2 0 002-2v-3" stroke="#1c2b4a" strokeWidth="1.8" strokeLinecap="round"/></svg>
+                <div><p className="text-[10px] text-[#999]">Carpet Area</p><p className="text-[12px] font-bold text-[#1c2b4a]">~2400 Sq. Ft.</p></div>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" stroke="#1c2b4a" strokeWidth="1.8" fill="none"/><path d="M3 9h18M9 3v18" stroke="#1c2b4a" strokeWidth="1.2"/></svg>
+                <div><p className="text-[10px] text-[#999]">Configuration</p><p className="text-[12px] font-bold text-[#1c2b4a]">5 BHK + 5T</p></div>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="8" width="18" height="13" rx="1" stroke="#1c2b4a" strokeWidth="1.8" fill="none"/><path d="M8 8V5a4 4 0 018 0v3" stroke="#1c2b4a" strokeWidth="1.8" strokeLinecap="round"/></svg>
+                <div><p className="text-[10px] text-[#999]">Balcony</p><p className="text-[12px] font-bold text-[#1c2b4a]">4 Balconies</p></div>
+              </div>
+            </div>
+            <div className="px-5 pb-6">
+              <button
+                onClick={() => setModalOpen(true)}
+                className="w-full py-3.5 rounded-xl text-white text-[14px] font-semibold hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+                style={{ background: "#1c2b4a" }}
+              >
+                View 5 BHK Floor Plan →
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── Lightbox for home gallery ──
 const homeGalleryImages = [
   { src: "/trump1.webp", alt: "Luxury Bedroom" },
@@ -1339,6 +1191,128 @@ function GallerySection() {
         </div>
       </section>
     </>
+  );
+}
+
+// ── Video Section ──
+function VideoSection() {
+  const label    = useInView(0.1);
+  const videoRef = useInView(0.15);
+  const textRef  = useInView(0.15);
+
+  return (
+    <section id="video" className="w-full py-16 px-4 sm:px-10 bg-white overflow-hidden">
+      <div className="mx-auto max-w-6xl">
+
+        {/* Top label */}
+        <p
+          className="text-center text-[12px] font-bold tracking-[0.3em] uppercase mb-10"
+          style={{
+            color: "#c9a84c",
+            transition: "opacity 0.7s ease, transform 0.7s ease",
+            opacity: label.inView ? 1 : 0,
+            transform: label.inView ? "translateY(0)" : "translateY(-16px)",
+          }}
+          ref={label.ref}
+        >
+          — EXPERIENCE THE VISION —
+        </p>
+
+        {/* Two-column: video left, text right */}
+        <div className="flex flex-col lg:flex-row gap-10 items-center">
+
+          {/* ── Left: Video — slides in from LEFT ── */}
+          <div
+            ref={videoRef.ref}
+            className="relative w-full lg:w-1/2 rounded-2xl overflow-hidden shadow-2xl shrink-0"
+            style={{
+              border: "1px solid rgba(201,168,76,0.35)",
+              transition: "opacity 0.9s ease, transform 0.9s ease",
+              opacity: videoRef.inView ? 1 : 0,
+              transform: videoRef.inView ? "translateX(0)" : "translateX(-80px)",
+            }}
+          >
+            <div className="absolute top-0 left-0 right-0 h-[2px] z-10"
+              style={{ background: "linear-gradient(90deg, transparent, #c9a84c, transparent)" }} />
+            <video
+              controls
+              playsInline
+              poster="/image copy.png"
+              className="w-full block"
+              style={{ maxHeight: "400px", objectFit: "cover", background: "#000" }}
+            >
+              <source
+                src="/Nehaa_Raathii___🏙️_TRUMP_TOWERS_NOIDA___A_NEW_ADDRESS_OF_LUXURY__What_does_luxury_living_look_like_when_an_iconic_global_brand_meets_premium_real_est(720p).mp4"
+                type="video/mp4"
+              />
+            </video>
+            <div className="absolute bottom-0 left-0 right-0 h-[2px] z-10"
+              style={{ background: "linear-gradient(90deg, transparent, #c9a84c, transparent)" }} />
+          </div>
+
+          {/* ── Right: Text — slides in from RIGHT ── */}
+          <div
+            ref={textRef.ref}
+            className="flex-1 flex flex-col gap-6"
+            style={{
+              transition: "opacity 0.9s ease 0.15s, transform 0.9s ease 0.15s",
+              opacity: textRef.inView ? 1 : 0,
+              transform: textRef.inView ? "translateX(0)" : "translateX(80px)",
+            }}
+          >
+            {/* Gold divider */}
+            <div className="flex items-center gap-3">
+              <div className="h-px flex-1" style={{ background: "rgba(201,168,76,0.3)" }} />
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"
+                  stroke="#c9a84c" strokeWidth="1.5" fill="none" />
+              </svg>
+              <div className="h-px flex-1" style={{ background: "rgba(201,168,76,0.3)" }} />
+            </div>
+
+            <h2 className="text-[28px] md:text-[34px] font-bold leading-tight text-[#1c2b4a]">
+              Trump Towers Noida{" "}
+              <span style={{ color: "#c9a84c" }}>Sector 94</span>
+            </h2>
+
+            <p className={`${lexend.className} text-[15px] leading-[1.9]`} style={{ color: "#444" }}>
+              Discover a new standard of luxury living at Trump Towers Noida, Sector 94. Designed for those who appreciate elegance, exclusivity, and modern sophistication, this landmark destination brings together premium residences, iconic architecture, and a lifestyle crafted around comfort.{" "}
+              Located in one of Noida&apos;s prominent locations, the development offers an impressive blend of contemporary design and world-class living. From refined interiors to thoughtfully planned spaces, every detail reflects a vision of luxury and distinction.{" "}
+              Explore Trump Towers Noida, Sector 94, and discover a lifestyle where exceptional design meets modern urban living.
+            </p>
+
+            {/* Key highlights — staggered */}
+            <div className="flex flex-col gap-3 mt-2">
+              {[
+                "Private lift lobbies",
+                "Double-height living areas",
+                "Panoramic Yamuna river views",
+                "Delhi–Noida border location",
+              ].map((point, i) => (
+                <div
+                  key={point}
+                  className="flex items-center gap-3"
+                  style={{
+                    transition: `opacity 0.5s ease ${0.3 + i * 0.1}s, transform 0.5s ease ${0.3 + i * 0.1}s`,
+                    opacity: textRef.inView ? 1 : 0,
+                    transform: textRef.inView ? "translateX(0)" : "translateX(30px)",
+                  }}
+                >
+                  <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "#c9a84c" }} />
+                  <span className={`${lexend.className} text-[14px] font-medium`} style={{ color: "#333" }}>
+                    {point}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Bottom divider */}
+            <div className="h-px w-full mt-2" style={{ background: "rgba(28,43,74,0.12)" }} />
+          </div>
+
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -1757,6 +1731,14 @@ function OverviewSection() {
         @keyframes shimmerCard {
           0%   { background-position: -200% 0; }
           100% { background-position: 200% 0; }
+        }
+        @keyframes mapReveal {
+          0%   { opacity: 0; transform: scale(1.04) translateY(16px); }
+          100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes heroBgZoom {
+          0%   { transform: scale(1);    }
+          100% { transform: scale(1.06); }
         }
       `}</style>
     </>
