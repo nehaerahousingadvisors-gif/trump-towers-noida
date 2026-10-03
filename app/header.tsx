@@ -25,7 +25,7 @@ export default function Header() {
   return (
     <header className="w-full sticky top-0 z-50 bg-white shadow-[0_1px_12px_rgba(0,0,0,0.06)]">
 
-      <div className="mx-auto flex items-center justify-between px-6 lg:px-10 py-3 max-w-screen-2xl">
+      <div className="mx-auto flex items-center justify-between px-4 lg:px-10 py-1.5 lg:py-3 max-w-screen-2xl">
 
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center shrink-0">
@@ -33,7 +33,7 @@ export default function Header() {
           <img
             src="/logotrump-removebg-preview.png"
             alt="Trump Towers Noida"
-            style={{ height: "54px", width: "auto", objectFit: "contain" }}
+            className="h-8 lg:h-[54px] w-auto object-contain"
           />
         </Link>
 

@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="flex flex-col items-center gap-4">
           <div
             className="w-[68px] h-[68px] rounded-full flex items-center justify-center"
-            style={{ background: "#c9a84c" }}
+            style={{ background: "#1c2b4a" }}
           >
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path
@@ -29,7 +29,7 @@ export default function Footer() {
         <div className="flex flex-col items-center gap-4">
           <div
             className="w-[68px] h-[68px] rounded-full flex items-center justify-center"
-            style={{ background: "#c9a84c" }}
+            style={{ background: "#1c2b4a" }}
           >
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path
@@ -48,7 +48,7 @@ export default function Footer() {
         <div className="flex flex-col items-center gap-4">
           <div
             className="w-[68px] h-[68px] rounded-full flex items-center justify-center"
-            style={{ background: "#c9a84c" }}
+            style={{ background: "#1c2b4a" }}
           >
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path
