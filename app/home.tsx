@@ -9,7 +9,7 @@ const lexend = Lexend({ subsets: ["latin"], weight: ["400", "500", "600"] });
 
 // ── Hero background crossfade slider ──
 const heroBgImages = [
-  { src: "/image copy 6.png",      pos: "center center" },
+  { src: "/image copy 7.png",      pos: "center center" },
   { src: "/image copy 6.png", pos: "center top"    },
 ];
 

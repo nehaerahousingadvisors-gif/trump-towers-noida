@@ -23,7 +23,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="w-full sticky top-0 z-50 bg-white shadow-[0_1px_12px_rgba(0,0,0,0.06)]">
+    <header className="w-full sticky top-0 z-50 shadow-[0_2px_20px_rgba(0,0,0,0.3)]" style={{ background: "#1c2b4a" }}>
 
       <div className="mx-auto flex items-center justify-between px-4 lg:px-10 py-1.5 lg:py-3 max-w-screen-2xl">
 
@@ -46,7 +46,7 @@ export default function Header() {
             <Link
               key={link.label}
               href={link.href}
-              className="relative px-4 py-2 text-[12.5px] font-semibold tracking-[0.12em] text-[#1c2b4a] transition-colors duration-200 whitespace-nowrap group hover:text-[#c9a84c]"
+              className="relative px-4 py-2 text-[12.5px] font-semibold tracking-[0.12em] text-white transition-colors duration-200 whitespace-nowrap group hover:text-[#c9a84c]"
             >
               {link.label}
               {/* Animated gold underline */}
@@ -79,7 +79,7 @@ export default function Header() {
 
         {/* ── Mobile Hamburger ── */}
         <button
-          className="lg:hidden p-2 text-[#1c2b4a]"
+          className="lg:hidden p-2 text-white"
           onClick={() => setMenuOpen((prev) => !prev)}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
@@ -104,7 +104,7 @@ export default function Header() {
 
       {/* ── Mobile Menu ── */}
       {menuOpen && (
-        <div id="mobile-menu" className="lg:hidden bg-white border-t border-[#ebebeb] px-6 pb-6">
+        <div id="mobile-menu" className="lg:hidden border-t border-white/10 px-6 pb-6" style={{ background: "#1c2b4a" }}>
           <nav
             aria-label="Mobile navigation"
             className={`${raleway.className} flex flex-col pt-2`}
@@ -114,7 +114,7 @@ export default function Header() {
                 key={link.label}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="py-3.5 text-[13px] font-semibold tracking-[0.12em] text-[#1c2b4a] hover:text-[#c9a84c] transition-colors border-b border-[#f0f0f0] last:border-0"
+                className="py-3.5 text-[13px] font-semibold tracking-[0.12em] text-white hover:text-[#c9a84c] transition-colors border-b border-white/10 last:border-0"
               >
                 {link.label}
               </Link>
